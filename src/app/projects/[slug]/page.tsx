@@ -87,7 +87,7 @@ const projectDetails = {
     ],
     githubUrl: "#",
     liveUrl: "https://project12826877.tilda.ws/",
-    image: "/images/магазин.png",
+    image: "/images/wedding.png",
     color: "from-pink-500 to-pink-700"
   }
 };
@@ -102,10 +102,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
             <h1 className="text-4xl font-bold mb-6">Project Not Found</h1>
             <Link 
-              href="/#projects"
+              href="/"
               className="inline-flex items-center text-blue-500 hover:text-blue-600"
             >
-              ← Back to Projects
+              ← Back to Portfolio
             </Link>
           </div>
         </div>
@@ -115,6 +115,26 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Back to Portfolio Button */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute top-6 left-6 z-10"
+      >
+        <Link href="/">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all duration-300 border border-white/30"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Назад до портфоліо</span>
+          </motion.button>
+        </Link>
+      </motion.div>
+
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -255,6 +275,29 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+        className="container mx-auto px-4 py-12"
+      >
+        <div className="max-w-6xl mx-auto text-center">
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Повернутися до портфоліо</span>
+            </motion.button>
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 } 

@@ -15,22 +15,22 @@ interface Skills {
 
 const skills: Skills = {
   "Frontend Development": {
-    level: 90,
+    level: 80,
     details: ["React", "TypeScript", "Next.js", "TailwindCSS", "Framer Motion"],
     color: "from-blue-500 to-blue-600"
   },
   "Backend Development": {
-    level: 85,
+    level: 55,
     details: ["Node.js", "Express", "MongoDB", "PostgreSQL", "REST API"],
     color: "from-green-500 to-green-600"
   },
   "DevOps & Infrastructure": {
-    level: 80,
+    level: 60,
     details: ["Docker", "AWS", "CI/CD", "Linux", "Nginx"],
     color: "from-purple-500 to-purple-600"
   },
   "Security": {
-    level: 75,
+    level: 50,
     details: ["Web Security", "Authentication", "Authorization", "HTTPS", "CORS"],
     color: "from-red-500 to-red-600"
   }

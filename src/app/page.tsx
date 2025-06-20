@@ -9,6 +9,9 @@ import NetworkArchitecture from '@/components/NetworkArchitecture';
 import ProjectCard from '@/components/ProjectCard';
 import TechIcon from '@/components/TechIcon';
 import ExperienceTimeline from '@/components/ExperienceTimeline';
+import Certificates from '@/components/Certificates';
+import SystemMonitor from '@/components/SystemMonitor';
+import MonitoringCharts from '@/components/MonitoringCharts';
 
 const projects = [
   {
@@ -21,20 +24,20 @@ const projects = [
   {
     title: "Voodoo Test",
     description: "E-commerce platform with modern UI/UX design",
-    image: "/images/grd.png",
+    image: "/images/магазин.png",
     slug: "voodoo-test",
     liveUrl: "https://leshamer2255.github.io/Voodoo-Test/"
   },
   {
     title: "Wedding Website",
     description: "Interactive wedding invitation website",
-    image: "/images/магазин.png",
+    image: "/images/wedding.png",
     slug: "wedding-website",
     liveUrl: "https://project12826877.tilda.ws/"
   },
   {
-    title: "Tax Manager",
-    description: "Comprehensive tax management system for businesses",
+    title: "ЩОсь на потім",
+    description: "опис",
     image: "/images/grd.png",
     slug: "tax-manager",
     liveUrl: "https://tax-manager-demo.com"
@@ -140,6 +143,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Certificates Section */}
+      <Certificates />
+
       {/* Linux Commands Section */}
       <LinuxCommands />
 
@@ -163,6 +169,12 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
+
+      {/* System Monitor Section */}
+      <SystemMonitor />
+
+      {/* Monitoring Charts Section */}
+      <MonitoringCharts />
 
       {/* Projects Section */}
       <section id="projects" className="py-20 bg-white dark:bg-gray-800">
