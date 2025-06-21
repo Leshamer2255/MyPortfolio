@@ -12,6 +12,8 @@ import ExperienceTimeline from '@/components/ExperienceTimeline';
 import Certificates from '@/components/Certificates';
 import SystemMonitor from '@/components/SystemMonitor';
 import MonitoringCharts from '@/components/MonitoringCharts';
+import PDFGenerator from '@/components/PDFGenerator';
+import CVContent from '@/components/CVContent';
 
 const projects = [
   {
@@ -82,14 +84,21 @@ export default function Home() {
         transition={{ duration: 1 }}
       >
         <div className="text-center z-10">
-          <motion.h1 
-            className="text-6xl font-bold mb-4"
+          <motion.div
+            className="flex items-center justify-center mb-6"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.1 }}
           >
-            Melnichuk Oleksii
-          </motion.h1>
+            <img 
+              src="/images/ло.png" 
+              alt="Oleksii Melnichuk" 
+              className="w-24 h-24 rounded-full mr-6 border-4 border-white/20 shadow-lg"
+            />
+            <h1 className="text-6xl font-bold">
+              Melnichuk Oleksii
+            </h1>
+          </motion.div>
           <motion.p 
             className="text-2xl text-gray-300 mb-8"
             initial={{ y: 20, opacity: 0 }}
@@ -110,6 +119,9 @@ export default function Home() {
             >
               View Projects
             </a>
+            <PDFGenerator filename="Oleksii_Melnichuk_CV.pdf">
+              <CVContent />
+            </PDFGenerator>
             <a 
               href="#contact" 
               className="px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
