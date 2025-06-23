@@ -1,0 +1,14 @@
+<svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="150" rx="10" fill="url(#linux-gradient)"/>
+  <defs>
+    <linearGradient id="linux-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FF00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#008000;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <text x="100" y="60" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">LPIC-1</text>
+  <text x="100" y="80" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12">Linux Administrator</text>
+  <text x="100" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12">Professional</text>
+  <circle cx="100" cy="120" r="15" fill="white" opacity="0.2"/>
+  <path d="M95 115 L105 120 L95 125 Z" fill="white"/>
+</svg> 

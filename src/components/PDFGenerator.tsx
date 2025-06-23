@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -11,17 +11,27 @@ interface PDFGeneratorProps {
 
 export default function PDFGenerator({ children, filename = 'Oleksii_Melnichuk_CV.pdf' }: PDFGeneratorProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const generatePDF = async () => {
-    if (!contentRef.current) return;
+    if (!contentRef.current) {
+      console.error('Content ref is not available');
+      return;
+    }
+
+    setIsGenerating(true);
 
     try {
-      // Показуємо індикатор завантаження
-      const button = document.querySelector('[data-pdf-button]') as HTMLButtonElement;
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Generating PDF...';
-      }
+      console.log('Starting PDF generation...');
+      
+      // Показуємо контент тимчасово для рендерингу
+      contentRef.current.style.display = 'block';
+      contentRef.current.style.position = 'absolute';
+      contentRef.current.style.left = '-9999px';
+      contentRef.current.style.top = '0';
+
+      // Даємо час для рендерингу
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Налаштування для html2canvas
       const canvas = await html2canvas(contentRef.current, {
@@ -33,7 +43,10 @@ export default function PDFGenerator({ children, filename = 'Oleksii_Melnichuk_C
         height: contentRef.current.scrollHeight,
         scrollX: 0,
         scrollY: 0,
+        logging: true, // Додаємо логування для дебагу
       });
+
+      console.log('Canvas created, generating PDF...');
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -57,23 +70,25 @@ export default function PDFGenerator({ children, filename = 'Oleksii_Melnichuk_C
         heightLeft -= pageHeight;
       }
 
+      console.log('PDF generated, saving...');
+
       // Завантажуємо PDF
       pdf.save(filename);
 
-      // Відновлюємо кнопку
-      if (button) {
-        button.disabled = false;
-        button.textContent = 'Download CV';
-      }
+      console.log('PDF saved successfully');
+
     } catch (error) {
       console.error('Error generating PDF:', error);
-      
-      // Відновлюємо кнопку в разі помилки
-      const button = document.querySelector('[data-pdf-button]') as HTMLButtonElement;
-      if (button) {
-        button.disabled = false;
-        button.textContent = 'Download CV';
+      alert('Помилка при генерації PDF. Перевірте консоль для деталей.');
+    } finally {
+      // Приховуємо контент знову
+      if (contentRef.current) {
+        contentRef.current.style.display = 'none';
+        contentRef.current.style.position = 'static';
+        contentRef.current.style.left = 'auto';
+        contentRef.current.style.top = 'auto';
       }
+      setIsGenerating(false);
     }
   };
 
@@ -81,12 +96,22 @@ export default function PDFGenerator({ children, filename = 'Oleksii_Melnichuk_C
     <div>
       <button
         onClick={generatePDF}
-        data-pdf-button
-        className="px-6 py-3 bg-green-500 rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isGenerating}
+        className="px-8 py-4 bg-green-500 hover:bg-green-600 active:bg-green-700 transition-all duration-200 text-lg font-semibold text-center cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
-        Download CV
+        {isGenerating ? 'Generating PDF...' : 'Download CV'}
       </button>
-      <div ref={contentRef} className="hidden">
+      <div 
+        ref={contentRef} 
+        className="hidden"
+        style={{ 
+          display: 'none',
+          position: 'absolute',
+          left: '-9999px',
+          top: '0',
+          zIndex: -1
+        }}
+      >
         {children}
       </div>
     </div>

@@ -3,8 +3,10 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import Navigation from '@/components/Navigation';
+import ScrollProgress from '@/components/ScrollProgress';
+import ScrollToTop from '@/components/ScrollToTop';
 import SkillsChart from '@/components/SkillsChart';
-import LinuxCommands from '@/components/LinuxCommands';
 import NetworkArchitecture from '@/components/NetworkArchitecture';
 import ProjectCard from '@/components/ProjectCard';
 import TechIcon from '@/components/TechIcon';
@@ -66,81 +68,142 @@ export default function Home() {
 
   return (
     <main ref={containerRef} className="min-h-screen">
+      {/* Navigation */}
+      <Navigation />
+      
+      {/* Scroll Progress Bar */}
+      <ScrollProgress />
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+
       {/* Theme Toggle */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleTheme}
-        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-800"
+        className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-800"
       >
         {theme === 'dark' ? '🌞' : '🌙'}
       </motion.button>
 
       {/* Main Title Section */}
       <motion.section 
+        id="home"
         className="relative h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 text-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="text-center z-10">
-          <motion.div
-            className="flex items-center justify-center mb-6"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            <img 
-              src="/images/ло.png" 
-              alt="Oleksii Melnichuk" 
-              className="w-24 h-24 rounded-full mr-6 border-4 border-white/20 shadow-lg"
-            />
-            <h1 className="text-6xl font-bold">
-              Melnichuk Oleksii
-            </h1>
-          </motion.div>
-          <motion.p 
-            className="text-2xl text-gray-300 mb-8"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            Frontend Developer & System Administrator
-          </motion.p>
-          <motion.div
-            className="flex gap-4 justify-center"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
-            <a 
-              href="#projects" 
-              className="px-6 py-3 bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto">
+            {/* Left Side - Large Photo */}
+            <motion.div
+              className="flex-1 flex justify-center mb-8 lg:mb-0"
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
             >
-              View Projects
-            </a>
-            <PDFGenerator filename="Oleksii_Melnichuk_CV.pdf">
-              <CVContent />
-            </PDFGenerator>
-            <a 
-              href="#contact" 
-              className="px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
+              <img 
+                src="/images/ло.png" 
+                alt="Oleksii Melnichuk" 
+                className="w-80 h-80 lg:w-[500px] lg:h-[500px]"
+              />
+            </motion.div>
+
+            {/* Right Side - Name and Buttons */}
+            <motion.div
+              className="flex-1 text-center lg:text-left lg:ml-20"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              Contact Me
-            </a>
-          </motion.div>
+              <motion.h1 
+                className="text-5xl lg:text-7xl font-bold mb-6"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                Melnichuk
+                <br />
+                <span className="text-blue-400">Oleksii</span>
+              </motion.h1>
+              
+              <motion.p 
+                className="text-xl lg:text-2xl text-gray-300 mb-8"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                Frontend Developer & System Administrator
+              </motion.p>
+              
+              <motion.div
+                className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0 relative z-10"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 1.0 }}
+              >
+                <button 
+                  onClick={() => {
+                    console.log('View Projects button clicked');
+                    const element = document.getElementById('projects');
+                    console.log('Projects element:', element);
+                    if (element) {
+                      const offsetTop = element.offsetTop - 80; // Відступ для навігації
+                      window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                      });
+                    } else {
+                      console.error('Projects section not found');
+                    }
+                  }}
+                  className="px-8 py-4 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 text-lg font-semibold text-center cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 relative z-20"
+                >
+                  View Projects
+                </button>
+                <div className="relative z-20">
+                  <PDFGenerator filename="Oleksii_Melnichuk_CV.pdf">
+                    <CVContent />
+                  </PDFGenerator>
+                </div>
+                <button 
+                  onClick={() => {
+                    console.log('Contact Me button clicked');
+                    const element = document.getElementById('contact');
+                    console.log('Contact element:', element);
+                    if (element) {
+                      const offsetTop = element.offsetTop - 80; // Відступ для навігації
+                      window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                      });
+                    } else {
+                      console.error('Contact section not found');
+                    }
+                  }}
+                  className="px-8 py-4 border-2 border-white hover:bg-white hover:text-gray-900 active:bg-gray-100 transition-all duration-200 text-lg font-semibold text-center cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 relative z-20"
+                >
+                  Contact Me
+                </button>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900"
+          className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 z-0"
           style={{ opacity }}
         />
       </motion.section>
 
       {/* Skills Section */}
-      <SkillsChart />
+      <section id="skills">
+        <SkillsChart />
+      </section>
 
       {/* Experience Section */}
-      <section className="py-20 bg-gray-100 dark:bg-gray-900">
+      <section id="experience" className="py-20 bg-gray-100 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -156,10 +219,9 @@ export default function Home() {
       </section>
 
       {/* Certificates Section */}
-      <Certificates />
-
-      {/* Linux Commands Section */}
-      <LinuxCommands />
+      <section id="certificates">
+        <Certificates />
+      </section>
 
       {/* System Architecture Section */}
       <motion.section 
