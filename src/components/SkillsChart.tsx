@@ -54,7 +54,7 @@ export default function SkillsChart() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Skills Chart */}
-          <div className="space-y-6">
+          <div className="space-y-6 grid grid-cols-2 md:grid-cols-2 gap-8">
             {Object.entries(skills).map(([skill, data], index) => (
               <motion.div
                 key={skill}
@@ -62,21 +62,42 @@ export default function SkillsChart() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="cursor-pointer"
+                className="cursor-pointer flex flex-col items-center"
                 onClick={() => setSelectedSkill(skill)}
               >
-                <div className="flex justify-between mb-2">
-                  <span className="text-lg font-medium text-gray-300">{skill}</span>
-                  <span className="text-gray-400">{data.level}%</span>
-                </div>
-                <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                  <motion.div
-                    className={`h-full bg-gradient-to-r ${data.color}`}
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${data.level}%` }}
-                    transition={{ duration: 1, delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                  />
+                <div className="relative w-32 h-32 mb-4">
+                  <svg width="100%" height="100%" viewBox="0 0 120 120">
+                    <circle
+                      cx="60" cy="60" r="52"
+                      stroke="#374151"
+                      strokeWidth="12"
+                      fill="none"
+                    />
+                    <motion.circle
+                      cx="60" cy="60" r="52"
+                      stroke={`url(#grad${index})`}
+                      strokeWidth="12"
+                      fill="none"
+                      strokeDasharray={2 * Math.PI * 52}
+                      strokeDashoffset={2 * Math.PI * 52}
+                      animate={{ strokeDashoffset: (1 - data.level / 100) * 2 * Math.PI * 52 }}
+                      transition={{ duration: 1, delay: index * 0.2 }}
+                      style={{
+                        filter: 'drop-shadow(0 0 8px #3B82F6AA)',
+                        strokeLinecap: 'round',
+                      }}
+                    />
+                    <defs>
+                      <linearGradient id={`grad${index}`} x1="0" y1="0" x2="120" y2="120">
+                        <stop offset="0%" stopColor={data.color.split(' ')[0].replace('from-', '').replace('-500', '') || '#3B82F6'} />
+                        <stop offset="100%" stopColor={data.color.split(' ')[1]?.replace('to-', '').replace('-600', '') || '#2563EB'} />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-bold text-white">{data.level}%</span>
+                    <span className="text-xs text-gray-300 text-center mt-1">{skill}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}

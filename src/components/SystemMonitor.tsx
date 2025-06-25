@@ -81,21 +81,29 @@ const levelColors = {
 };
 
 export default function SystemMonitor() {
-  const [metrics, setMetrics] = useState<SystemMetrics>(generateRandomMetrics());
-  const [logs, setLogs] = useState<LogEntry[]>(generateRandomLogs());
+  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [logs, setLogs] = useState<LogEntry[] | null>(null);
   const [selectedService, setSelectedService] = useState<string>('all');
   const [isLive, setIsLive] = useState(true);
 
+  // Ініціалізація даних тільки на клієнті
+  useEffect(() => {
+    setMetrics(generateRandomMetrics());
+    setLogs(generateRandomLogs());
+  }, []);
+
   useEffect(() => {
     if (!isLive) return;
-
     const interval = setInterval(() => {
       setMetrics(generateRandomMetrics());
       setLogs(generateRandomLogs());
     }, 3000);
-
     return () => clearInterval(interval);
   }, [isLive]);
+
+  if (!metrics || !logs) {
+    return null; // або можна показати лоадер
+  }
 
   const filteredLogs = selectedService === 'all' 
     ? logs 

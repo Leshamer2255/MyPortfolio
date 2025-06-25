@@ -215,7 +215,7 @@ const NetworkArchitecture = () => {
               
               {/* Arrowhead */}
               <motion.path
-                d={`M${to.x - 2}% ${to.y}% L${to.x + 2}% ${to.y - 2}% L${to.x + 2}% ${to.y + 2}% Z`}
+                d={`M${to.x - 2} ${to.y} L${to.x + 2} ${to.y - 2} L${to.x + 2} ${to.y + 2} Z`}
                 fill={connection.isResponse ? "#2563EB" : "#4B5563"}
                 initial={{ opacity: 0 }}
                 animate={isAnimating ? { opacity: 1 } : { opacity: 0 }}

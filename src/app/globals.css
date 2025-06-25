@@ -129,4 +129,8 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html, body {
+  transition: background-color 0.5s, color 0.5s, border-color 0.5s;
 } 

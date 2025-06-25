@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import Navigation from '@/components/Navigation';
 import ScrollProgress from '@/components/ScrollProgress';
@@ -16,6 +16,11 @@ import SystemMonitor from '@/components/SystemMonitor';
 import MonitoringCharts from '@/components/MonitoringCharts';
 import PDFGenerator from '@/components/PDFGenerator';
 import CVContent from '@/components/CVContent';
+import ScrollRevealSection from '@/components/ScrollRevealSection';
+import ProjectFilter from '@/components/ProjectFilter';
+import GitHubRepos from '@/components/GitHubRepos';
+import ImageLightbox from '@/components/ImageLightbox';
+import ConfettiEasterEgg from '@/components/ConfettiEasterEgg';
 
 const projects = [
   {
@@ -23,28 +28,32 @@ const projects = [
     description: "A modern task management application with drag-and-drop functionality",
     image: "/images/grd.png",
     slug: "task-manager",
-    liveUrl: "http://frontend-taskmanager.s3-website.eu-north-1.amazonaws.com/"
+    liveUrl: "http://frontend-taskmanager.s3-website.eu-north-1.amazonaws.com/",
+    technologies: ["React", "TypeScript", "Tailwind", "Firebase"]
   },
   {
     title: "Voodoo Test",
     description: "E-commerce platform with modern UI/UX design",
     image: "/images/магазин.png",
     slug: "voodoo-test",
-    liveUrl: "https://leshamer2255.github.io/Voodoo-Test/"
+    liveUrl: "https://leshamer2255.github.io/Voodoo-Test/",
+    technologies: ["React", "Redux", "Styled Components", "Node.js"]
   },
   {
     title: "Wedding Website",
     description: "Interactive wedding invitation website",
     image: "/images/wedding.png",
     slug: "wedding-website",
-    liveUrl: "https://project12826877.tilda.ws/"
+    liveUrl: "https://project12826877.tilda.ws/",
+    technologies: ["Tilda", "JavaScript", "CSS3", "HTML5"]
   },
   {
     title: "ЩОсь на потім",
     description: "опис",
     image: "/images/grd.png",
     slug: "tax-manager",
-    liveUrl: "https://tax-manager-demo.com"
+    liveUrl: "https://tax-manager-demo.com",
+    technologies: ["React", "Node.js", "MongoDB", "Express"]
   }
 ];
 
@@ -58,13 +67,19 @@ const techIcons = [
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 600], [0, 120]);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
-
   const y = useTransform(scrollYProgress, [0, 1], [0, -300]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [eggClicks, setEggClicks] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   return (
     <main ref={containerRef} className="min-h-screen">
@@ -82,20 +97,37 @@ export default function Home() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleTheme}
-        className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-800"
+        className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-800 transition-colors duration-500"
+        aria-label="Toggle theme"
       >
-        {theme === 'dark' ? '🌞' : '🌙'}
+        <motion.span
+          key={theme}
+          initial={{ rotate: -90, scale: 0.7, opacity: 0 }}
+          animate={{ rotate: 0, scale: 1, opacity: 1 }}
+          exit={{ rotate: 90, scale: 0.7, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+          {theme === 'dark' ? (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
+          ) : (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          )}
+        </motion.span>
       </motion.button>
 
       {/* Main Title Section */}
       <motion.section 
         id="home"
-        className="relative h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 text-white"
+        className="relative h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 text-white overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="container mx-auto px-4">
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-b from-blue-200/40 via-white/0 to-pink-200/40 dark:from-blue-900/40 dark:via-gray-900/0 dark:to-pink-900/40 z-0 pointer-events-none"
+          style={{ y: parallaxY }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto">
             {/* Left Side - Large Photo */}
             <motion.div
@@ -104,10 +136,20 @@ export default function Home() {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <img 
-                src="/images/ло.png" 
-                alt="Oleksii Melnichuk" 
-                className="w-80 h-80 lg:w-[500px] lg:h-[500px]"
+              <img
+                src="/images/ло.png"
+                alt="Oleksii Melnichuk"
+                className="w-80 h-80 lg:w-[500px] lg:h-[500px] cursor-pointer"
+                onClick={() => {
+                  setEggClicks(c => {
+                    if (c + 1 >= 7) {
+                      setShowConfetti(true);
+                      setTimeout(() => setShowConfetti(false), 3000);
+                      return 0;
+                    }
+                    return c + 1;
+                  });
+                }}
               />
             </motion.div>
 
@@ -198,12 +240,12 @@ export default function Home() {
       </motion.section>
 
       {/* Skills Section */}
-      <section id="skills">
+      <ScrollRevealSection id="skills">
         <SkillsChart />
-      </section>
+      </ScrollRevealSection>
 
       {/* Experience Section */}
-      <section id="experience" className="py-20 bg-gray-100 dark:bg-gray-900">
+      <ScrollRevealSection id="experience" className="py-20 bg-gray-100 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -216,12 +258,12 @@ export default function Home() {
           </motion.h2>
           <ExperienceTimeline />
         </div>
-      </section>
+      </ScrollRevealSection>
 
       {/* Certificates Section */}
-      <section id="certificates">
+      <ScrollRevealSection id="certificates">
         <Certificates />
-      </section>
+      </ScrollRevealSection>
 
       {/* System Architecture Section */}
       <motion.section 
@@ -251,7 +293,7 @@ export default function Home() {
       <MonitoringCharts />
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 bg-white dark:bg-gray-800">
+      <ScrollRevealSection id="projects" className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -262,13 +304,22 @@ export default function Home() {
           >
             Featured Projects
           </motion.h2>
+          <ProjectFilter projects={projects} onFilter={setFilteredProjects} />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} {...project} />
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.slug} {...project} onImageClick={() => setLightboxImage(project.image)} />
             ))}
           </div>
         </div>
-      </section>
+      </ScrollRevealSection>
+
+      {/* GitHub Projects Section */}
+      <ScrollRevealSection id="github" className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center text-gray-900 dark:text-white">GitHub Projects</h2>
+          <GitHubRepos username="Leshamer2255" count={6} />
+        </div>
+      </ScrollRevealSection>
 
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-gray-100 dark:bg-gray-900">
@@ -324,6 +375,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {lightboxImage && (
+        <ImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+      )}
+
+      <ConfettiEasterEgg show={showConfetti} />
     </main>
   );
 } 
